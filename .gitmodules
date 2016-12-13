@@ -1,0 +1,57 @@
+[submodule "projects/so-cal-analytics"]
+	path = projects/so-cal-analytics
+	url = https://github.com/Kshitij-N-Kulkarni/so-cal-analytics
+[submodule "projects/DSO545"]
+	path = projects/DSO545
+	url = https://github.com/ekim528/DSO545
+[submodule "projects/Los-Angeles-City-311-Call-Center-Tracking-Data"]
+	path = projects/Los-Angeles-City-311-Call-Center-Tracking-Data
+	url = https://github.com/peipeihan/Los-Angeles-City-311-Call-Center-Tracking-Data
+[submodule "projects/ShinyStar-LA311"]
+	path = projects/ShinyStar-LA311
+	url = https://github.com/chloezhan/ShinyStar-LA311
+[submodule "projects/545Project"]
+	path = projects/545Project
+	url = https://github.com/DiceboyT/545Project
+[submodule "projects/Project"]
+	path = projects/Project
+	url = https://github.com/Vineetha27/Project
+[submodule "projects/545-Final-Presentation"]
+	path = projects/545-Final-Presentation
+	url = https://github.com/yungwenl/545-Final-Presentation
+[submodule "projects/DSO_545_MyLA311"]
+	path = projects/DSO_545_MyLA311
+	url = https://github.com/DSO545projectR1/DSO_545_MyLA311
+[submodule "projects/311-project"]
+	path = projects/311-project
+	url = https://github.com/DSO545311project/311-project
+[submodule "projects/Final-Project-Group-3"]
+	path = projects/Final-Project-Group-3
+	url = https://github.com/dso545group3/Final-Project-Group-3
+[submodule "projects/Afternoon-Section-Group-4-DSO-545-Final-Project"]
+	path = projects/Afternoon-Section-Group-4-DSO-545-Final-Project
+	url = https://github.com/Zerosss/Afternoon-Section-Group-4-DSO-545-Final-Project
+[submodule "projects/DSO-545--Final-Project-Group-5-"]
+	path = projects/DSO-545--Final-Project-Group-5-
+	url = https://github.com/shawnhardesty/DSO-545--Final-Project-Group-5-
+[submodule "projects/DSO545-Final-Project"]
+	path = projects/DSO545-Final-Project
+	url = https://github.com/yudong-94/DSO545-Final-Project
+[submodule "projects/311-LA"]
+	path = projects/311-LA
+	url = https://github.com/DSOGroup7/311-LA
+[submodule "projects/FinalProjectCode"]
+	path = projects/FinalProjectCode
+	url = https://github.com/WeLikeData/FinalProjectCode
+[submodule "projects/dso545"]
+	path = projects/dso545
+	url = https://github.com/pricklypearusc/dso545
+[submodule "projects/DSO545-FinalProject-Group10"]
+	path = projects/DSO545-FinalProject-Group10
+	url = https://github.com/OliviaBian/DSO545-FinalProject-Group10
+[submodule "projects/Final-Project"]
+	path = projects/Final-Project
+	url = https://github.com/DSO545PROJECT/Final-Project
+[submodule "projects/LACity311"]
+	path = projects/LACity311
+	url = https://github.com/DeepaRamaHegde/LACity311
