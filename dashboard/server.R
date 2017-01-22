@@ -7,6 +7,7 @@ library(lubridate)
 library(curl)
 library(ggplot2)
 library(stringr)
+library(RSocrata)
 
 ## read data
 # Council Population data
