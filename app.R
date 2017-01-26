@@ -26,7 +26,12 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   tabItems(
     tabItem(tabName = "dashboard",
-            h2("Dashboard tab content")
+            fluidRow(
+              box(width=4,
+                    dateRangeInput("dates", label = "Date Range",
+                                     start="2016-01-01",
+                                     end="2016-12-31"))
+            )
     ),
     
     tabItem(tabName = "widgets",
