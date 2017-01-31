@@ -2,7 +2,7 @@ library(shiny)
 library(shinydashboard)
 library(RSocrata)
 library(tidyverse)
-
+library(plotly)
 
 # READ From Socrata
 # data_2016 <- read.socrata("https://data.lacity.org/A-Well-Run-City/MyLA311-Service-Request-Data-2016/ndkd-k878")
@@ -25,13 +25,18 @@ sidebar <- dashboardSidebar(
 
 body <- dashboardBody(
   tabItems(
-    tabItem(tabName = "dashboard",
+    tabItem(tabName = "Totals Chart",
             fluidRow(
               box(width=4,
                     dateRangeInput("dates", label = "Date Range",
                                      start="2016-01-01",
-                                     end="2016-12-31"))
+                                     end="2016-12-31")
+                  )
+              box(width=8,
+                  
+                  )
             )
+            
     ),
     
     tabItem(tabName = "widgets",
