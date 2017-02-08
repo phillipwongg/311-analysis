@@ -139,13 +139,11 @@ server <- function(input, output) {
   
   output$day_time_heatmap <- renderPlotly({
     heat <- data %>%
-      group_by(day, hour, request_source) %>%
+      filter(request_source == input$request_source_heat) %>%
+      group_by(day, hour) %>%
       count()
     
-    
-    
     p <- heat %>%
-      filter(request_source == input$request_source_heat) %>%
       plot_ly() %>%
       add_heatmap(x = ~day, y = ~hour, z = ~n,
                   colorscale = warm_gradient, showscale = F,
