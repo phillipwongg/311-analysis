@@ -1,1 +1,9 @@
 data
+.RData
+.Rproj.user
+.Rhistory
+.DS_Store
+scratch_*.*
+*.bak.*
+MyLA311_Service_Request_Data_2016.csv
+MyLA311_Service_Request_Data_2017.csv
