@@ -24,8 +24,8 @@ subset_data <- function(data) {
     ungroup()
   
   data <- data %>%
-    mutate(day = wday(created_date, label = TRUE),
-           hour = hour(created_date)) 
+    mutate(day = lubridate::wday(created_date, label = TRUE),
+           hour = lubridate::hour(created_date)) 
   
   return(data)
 }
