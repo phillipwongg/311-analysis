@@ -64,7 +64,7 @@ body <- dashboardBody(
         box(
           title = "Heatmap of Request Traffic by Day and Time", width = 12,
           selectInput("request_source_heat", label = NULL, 
-                      selected = "Mobile App",
+                      selected = "Mobile App", width = "12em",
                       choices = c(
                         "Call", "Driver Self Report",
                         "Mobile App", "Self Service",
@@ -148,7 +148,7 @@ server <- function(input, output) {
       filter(request_source == input$request_source_heat) %>%
       plot_ly() %>%
       add_heatmap(x = ~day, y = ~hour, z = ~n,
-                  colorscale = warm_gradient,
+                  colorscale = warm_gradient, showscale = F,
                   text = ~paste("Day: ", day, "<br>Hour: ", hour,
                                 "<br>Total Requests: ", n),
                   hoverinfo = "text") 
