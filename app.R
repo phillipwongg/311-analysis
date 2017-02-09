@@ -44,7 +44,7 @@ sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem("Requests", tabName = "dashboard", icon = icon("cloud-download")),
     menuItem("Map", tabName = "map", icon = icon("map-o")),
-    menuItem("Service Request", tabName = "", icon = icon("truck"))
+    menuItem("Services", tabName = "services", icon = icon("truck"))
   )
 )
 
@@ -80,14 +80,11 @@ body <- dashboardBody(
       h2("Map")
     ),
     tabItem(
-      tabname = "map2",
-      h2("Test")
-      #fluidRow(
-        #box(
-        #  title = "Histogram of Request Types", width = 12,
-        #  plotlyOutput("request_type_hist")        
-        #)
-      #)
+      tabName = "services",
+      box(
+        title="Service Request Types", width = 12,
+        plotlyOutput("request_type_hist")
+      )
     )
   ) # end tabItems
 ) # body
@@ -166,7 +163,8 @@ server <- function(input, output) {
   })
   
   output$request_type_hist <- renderPlotly({
-    plot_ly(data, x = ~request_type, type="histogram", colors = "Set1")
+    plot_ly(data, x = ~request_type, type="histogram", colors = "Set1",
+            title="Request Volume by Service Type")
   })
   
 }
