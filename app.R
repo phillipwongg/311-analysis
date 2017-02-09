@@ -49,7 +49,7 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
-  useShinyjs(),
+  #useShinyjs(),
   #extendShinyjs(text = scroll),
   tags$body(id = "body"),
   includeCSS("www/custom.css"),
