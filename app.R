@@ -44,7 +44,7 @@ sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem("Requests", tabName = "dashboard", icon = icon("cloud-download")),
     menuItem("Map", tabName = "map", icon = icon("map-o")),
-    menuItem("Service Items", tabName = "requests", icon = icon("truck"))
+    menuItem("Service Request", tabName = "", icon = icon("truck"))
   )
 )
 
@@ -75,14 +75,19 @@ body <- dashboardBody(
         )
       ) 
     ),
-    
     tabItem(
       tabName = "map",
       h2("Map")
     ),
     tabItem(
-      tabname = "requests",
-      h2("Service Requests")
+      tabname = "map2",
+      h2("Test")
+      #fluidRow(
+        #box(
+        #  title = "Histogram of Request Types", width = 12,
+        #  plotlyOutput("request_type_hist")        
+        #)
+      #)
     )
   ) # end tabItems
 ) # body
@@ -95,7 +100,7 @@ server <- function(input, output) {
   output$requests_by_source <- renderPlotly({
     requests <- data %>%
       filter(request_source %in% c(
-        "Call", "Driver Self Report",
+        "Call", "Driver Self Reprenort",
         "Mobile App", "Self Service",
         "Email"
       )) %>%
@@ -158,6 +163,10 @@ server <- function(input, output) {
     
     p %>% layout(xaxis = list(title = ""),
                  yaxis = list(title = "Hour of the day"))
+  })
+  
+  output$request_type_hist <- renderPlotly({
+    plot_ly(data, x = ~request_type, type="histogram", colors = "Set1")
   })
   
 }
