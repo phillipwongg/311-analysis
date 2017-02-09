@@ -1,6 +1,6 @@
 library(shiny)
 library(shinydashboard)
-library(shinyjs)
+#library(shinyjs)
 library(tidyverse)
 library(plotly)
 
@@ -9,9 +9,9 @@ source("R/subsets.R")
 source("R/value_counts.R")
 
 # JS function ------------------------------------------------------------------ 
-scroll <- "
-shinyjs.scroll = function() { 
-$('body').animate({ scrollTop: 0 }, 'slow'); } "
+#scroll <- "
+#shinyjs.scroll = function() { 
+#$('body').animate({ scrollTop: 0 }, 'slow'); } "
 
 # Colors ----------------------------------------------------------------------- 
 pal <- RColorBrewer::brewer.pal(11, "Spectral")
@@ -43,13 +43,14 @@ header <- dashboardHeader(
 sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem("Requests", tabName = "dashboard", icon = icon("cloud-download")),
-    menuItem("Map", tabName = "map", icon = icon("map-o"))
+    menuItem("Map", tabName = "map", icon = icon("map-o")),
+    menuItem("Service Items", tabName = "requests", icon = icon("truck"))
   )
 )
 
 body <- dashboardBody(
   useShinyjs(),
-  extendShinyjs(text = scroll),
+  #extendShinyjs(text = scroll),
   tags$body(id = "body"),
   includeCSS("www/custom.css"),
   tabItems(
@@ -78,6 +79,10 @@ body <- dashboardBody(
     tabItem(
       tabName = "map",
       h2("Map")
+    ),
+    tabItem(
+      tabname = "requests",
+      h2("Service Requests")
     )
   ) # end tabItems
 ) # body
