@@ -166,7 +166,7 @@ server <- function(input, output) {
     plot_ly(data, x = ~request_type, type="histogram", colors = "Set1",
             title="Request Volume by Service Type")
   })
-  
+  ## TK add filters
 }
 
 # run app ---------------------------------------------------------------------- 
