@@ -163,8 +163,15 @@ server <- function(input, output) {
   })
   
   output$request_type_hist <- renderPlotly({
-    plot_ly(data, x = ~request_type, type="histogram", colors = "Set1",
-            title="Request Volume by Service Type")
+    plot_ly(data, x = ~request_type, type="histogram", colors = "Set1") %>% 
+      
+      layout(title = "Request Volume by Service Type", 
+             x = "Request Type",
+             y = "Total Volume 2016-to-date", 
+             updatemenus = list(
+               
+             ))
+    
   })
   ## TK add filters
 }
