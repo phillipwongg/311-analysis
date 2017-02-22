@@ -88,7 +88,7 @@ body <- dashboardBody(
         width = 12
       ),
       box(
-        title="Service Request Types", 
+        title="Service Request Types by Day", 
         width = 12,
         plotlyOutput("request_type_hist")
       )
