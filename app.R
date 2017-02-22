@@ -83,9 +83,13 @@ body <- dashboardBody(
       tabName = "services",
       box(
         input <- dateRangeInput('dateRange',
-                       label = 'Date Range',
-                       start = Sys.Date() - 365, end = Sys.Date()-2),
-        title="Service Request Types", width = 12,
+                                label = 'Date Range',
+                                start = Sys.Date() - 365, end = Sys.Date()-2),
+        width = '4'
+      ),
+      box(
+        title="Service Request Types", 
+        width = 8,
         plotlyOutput("request_type_hist")
       )
     )
@@ -166,11 +170,12 @@ server <- function(input, output) {
   })
   
   output$request_type_hist <- renderPlotly({
-    plot_ly(data,
+    title_string <- paste("Request Types by Volume from ", as.character(input$dateRange[1]), " to ", as.character(input$dateRange[2]) )
+    plot_ly(data %>% subset(data$created_date > input$dateRange[1] & data$created_date < input$dateRange[2]),
             x = ~request_type, type="histogram", colors = "Set1") %>% 
-      
-      layout(title = "Request Volume by Service Type from" + input$dateRange[0].asString() + input$dateRange[1].asString(), 
-             xlab("Request Type")
+          
+           layout(title = title_string , 
+                xlab("Request Type")
              )
              
     
