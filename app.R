@@ -82,6 +82,9 @@ body <- dashboardBody(
     tabItem(
       tabName = "services",
       box(
+        input <- dateRangeInput('dateRange',
+                       label = 'Date Range',
+                       start = Sys.Date() - 365, end = Sys.Date()-2),
         title="Service Request Types", width = 12,
         plotlyOutput("request_type_hist")
       )
@@ -163,14 +166,13 @@ server <- function(input, output) {
   })
   
   output$request_type_hist <- renderPlotly({
-    plot_ly(data, x = ~request_type, type="histogram", colors = "Set1") %>% 
+    plot_ly(data,
+            x = ~request_type, type="histogram", colors = "Set1") %>% 
       
-      layout(title = "Request Volume by Service Type", 
-             x = "Request Type",
-             y = "Total Volume 2016-to-date", 
-             updatemenus = list(
-               
-             ))
+      layout(title = "Request Volume by Service Type from" + input$dateRange[0].asString() + input$dateRange[1].asString(), 
+             xlab("Request Type")
+             )
+             
     
   })
   ## TK add filters
