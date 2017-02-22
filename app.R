@@ -85,11 +85,11 @@ body <- dashboardBody(
         input <- dateRangeInput('dateRange',
                                 label = 'Date Range',
                                 start = Sys.Date() - 365, end = Sys.Date()-2),
-        width = '4'
+        width = 12
       ),
       box(
         title="Service Request Types", 
-        width = 8,
+        width = 12,
         plotlyOutput("request_type_hist")
       )
     )
