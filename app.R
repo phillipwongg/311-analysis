@@ -3,9 +3,11 @@ library(shinydashboard)
 #library(shinyjs)
 library(tidyverse)
 library(plotly)
+library(leaflet)
 
 source("R/load_data.R")
 source("R/subsets.R")
+source("R/load_shapefile.R")
 source("R/value_counts.R")
 
 # JS function ------------------------------------------------------------------ 
@@ -32,6 +34,7 @@ warm_gradient <- data_frame(
 # Read data -------------------------------------------------------------------- 
 data <- load_data()
 data <- subset_data(data)
+districts <- load_shapefile(data)
 
 # ui --------------------------------------------------------------------------- 
 header <- dashboardHeader(
@@ -42,8 +45,8 @@ header <- dashboardHeader(
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Requests", tabName = "dashboard", icon = icon("cloud-download")),
-    menuItem("Map", tabName = "map", icon = icon("map-o")),
+    menuItem("Requests", tabName = "requests", icon = icon("cloud-download")),
+    menuItem("Maps", tabName = "maps", icon = icon("map-o")),
     menuItem("Services", tabName = "services", icon = icon("truck"))
   )
 )
@@ -56,7 +59,7 @@ body <- dashboardBody(
   tabItems(
     # Requests ----------------------------------------------------------------- 
     tabItem(
-      tabName = "dashboard",
+      tabName = "requests",
       fluidRow(
         box(
           title = "Time Series of Requests by Source", width = 12,
@@ -75,10 +78,32 @@ body <- dashboardBody(
         )
       ) 
     ),
+    # Maps ---------------------------------------------------------------------- 
     tabItem(
-      tabName = "map",
-      h2("Map")
+      tabName = "maps",
+      tags$style(type = "text/css", "#district_map {height: calc(100vh - 80px)!important;}"),
+      leafletOutput("district_map"),
+      absolutePanel(
+        top = 80, right = 30,
+        selectInput(
+          "map_request_type", label = NULL,
+          selected = "total_requests", choices = c(
+            "Total Requests" = "total_requests",
+            "Bulky Items" = "bulky_items", 
+            "Dead Animal Removal" = "dead_animal_removal", 
+            "Electronic Waste" = "electronic_waste", "Feedback"  = "feedback",
+            "Graffiti Removal" = "graffiti_removal",
+            "Homeless Encampment" = "homeless_encampment",
+            "Illegal Dumping Pickup" = "illegal_dumping_pickup",
+            "Metal Household Appliances" = "metal_household_appliances",
+            "Multiple Streetlight Issue" = "multiple_streetlight_issue",
+            "Other" = "other", "Report Water Waste"  = "report_water_waste",
+            "Single Streetlight Issue" = "single_streetlight_issue"
+          )
+        )
+      )
     ),
+    # Services ----------------------------------------------------------------- 
     tabItem(
       tabName = "services",
       box(
@@ -101,6 +126,7 @@ ui <- dashboardPage(header, sidebar, body)
 # server ----------------------------------------------------------------------- 
 server <- function(input, output) { 
   
+  # requests ------------------------------------------------------------------- 
   output$requests_by_source <- renderPlotly({
     requests <- data %>%
       filter(request_source %in% c(
@@ -180,7 +206,42 @@ server <- function(input, output) {
              
     
   })
-  ## TK add filters
+  
+  # maps ----------------------------------------------------------------------- 
+  
+  # reactive data
+  districts_map <- reactive({
+    districts@data <- districts@data %>% 
+      select_("name", "DISTRICT", input$map_request_type) 
+    
+    colnames(districts@data) <- c("name", "district", "totals")
+    
+    districts
+  })
+  
+  output$district_map <- renderLeaflet({
+    
+    mapbox <- "https://api.mapbox.com/styles/v1/robertmitchellv/cipr7teic001aekm72dnempan/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoicm9iZXJ0bWl0Y2hlbGx2IiwiYSI6ImNpcHI2cXFnbTA3MHRmbG5jNWJzMzJtaDQifQ.vtvgLokcc_EJgnWVPL4vXw"
+    
+    popup <- paste(
+      "<strong>District:</strong>", 
+      districts_map()@data$district, 
+      "<br><strong>", 
+      stringr::str_replace_all(stringr::str_to_title(input$map_request_type), "_", " "), 
+      ":</strong>", districts_map()@data$totals,
+      sep = " "
+    )
+    
+    leaflet() %>%
+      addTiles(mapbox) %>%
+      setView(lng = -118.2427, lat = 34.0537, zoom = 10) %>%
+      addPolygons(
+        data = districts_map(), popup = popup,
+        stroke = T, weight = 0.5, fillOpacity = 0.5, smoothFactor = 0.5,
+        color = ~colorNumeric(warm, districts_map()$totals)(totals)
+      )
+  })
+  
 }
 
 # run app ---------------------------------------------------------------------- 
