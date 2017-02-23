@@ -27,5 +27,10 @@ subset_data <- function(data) {
     mutate(day = lubridate::wday(created_date, label = TRUE),
            hour = lubridate::hour(created_date)) 
   
+  data <- data %>% 
+    group_by(council_district) %>%
+    mutate(total_requests_by_district = n()) %>%
+    ungroup()
+  
   return(data)
 }
