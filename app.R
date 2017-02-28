@@ -197,14 +197,12 @@ server <- function(input, output) {
   
   output$request_type_hist <- renderPlotly({
     title_string <- paste("Request Types by Volume from ", as.character(input$dateRange[1]), " to ", as.character(input$dateRange[2]) )
-    plot_ly(data %>% subset(data$created_date > input$dateRange[1] & data$created_date < input$dateRange[2]),
-            x = ~request_type, type="histogram", colors = "Set1") %>% 
-          
-           layout(title = title_string , 
+    plot_ly(data %>% subset(data$created_date > input$dateRange[1] & 
+                            data$created_date < input$dateRange[2]),
+                            x = ~request_type, type="histogram", colors = "Set1") %>% 
+            layout(title = title_string, 
                 xlab("Request Type")
-             )
-             
-    
+                )
   })
   
   # maps ----------------------------------------------------------------------- 
