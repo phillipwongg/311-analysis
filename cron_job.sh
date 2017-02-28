@@ -2,6 +2,8 @@
 
 set -e 
 
-wget -P /home/ubuntu/311-analysis/data/ "https://data.lacity.org/api/views/d4vt-q4t5/rows.csv?accessType=DOWNLOAD"
-rm /home/ubuntu/311-analysis/data/MyLA311_Service_Request_Data_2017.csv
-mv /home/ubuntu/311-analysis/data/rows.csv?accessType=DOWNLOAD /home/ubuntu/311-analysis/data/MyLA311_Service_Request_Data_2017.csv
+cd /srv/shiny-server/la-city/311-analysis
+
+wget -P ./data/ "https://data.lacity.org/api/views/d4vt-q4t5/rows.csv?accessType=DOWNLOAD"
+rm ./data/MyLA311_Service_Request_Data_2017.csv
+mv ./data/rows.csv?accessType=DOWNLOAD ./data/MyLA311_Service_Request_Data_2017.csv
