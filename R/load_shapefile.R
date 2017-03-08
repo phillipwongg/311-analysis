@@ -15,8 +15,6 @@ load_shapefile <- function(data) {
     count() %>%
     spread(request_type, n)
   
-  ## I think the issue is in this file
- 
   # make the new variable names easier to work with 
   colnames(council_service_totals) <- colnames(council_service_totals) %>% 
     stringr::str_to_lower() %>% 
