@@ -20,6 +20,10 @@ If you want the data to automatically update, you'll need to use the `cron_job.s
 
 `www` contains web stylesheets. 
 
+## Contributing
+
+See `Contributing.md`
+
 ## Contact 
 
 Hunter Owens (hunter.owens@lacity.org)
