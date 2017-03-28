@@ -221,23 +221,41 @@ server <- function(input, output) {
     
     mapbox <- "https://api.mapbox.com/styles/v1/robertmitchellv/cipr7teic001aekm72dnempan/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoicm9iZXJ0bWl0Y2hlbGx2IiwiYSI6ImNpcHI2cXFnbTA3MHRmbG5jNWJzMzJtaDQifQ.vtvgLokcc_EJgnWVPL4vXw"
     
-    popup <- paste(
-      "<strong>District:</strong>", 
-      districts_map()@data$district, 
-      "<br><strong>", 
-      stringr::str_replace_all(stringr::str_to_title(input$map_request_type), "_", " "), 
-      ":</strong>", districts_map()@data$totals,
-      sep = " "
-    )
+    pal <- colorBin(
+      warm, 
+      domain = districts_map()$totals, 
+      bins = 6)
     
-    leaflet() %>%
+    labels <- sprintf(
+      "<strong>District %s</strong><br/>%g requests",
+      districts_map()$name, districts_map()$totals
+    ) %>% lapply(htmltools::HTML)
+    
+    leaflet(districts_map()) %>%
       addTiles(mapbox) %>%
-      setView(lng = -118.2427, lat = 34.0537, zoom = 10) %>%
+      setView(lng = -118.2427, lat = 34.0537, zoom = 9) %>%
       addPolygons(
-        data = districts_map(), popup = popup,
-        stroke = T, weight = 0.5, fillOpacity = 0.5, smoothFactor = 0.5,
-        color = ~colorNumeric(warm, districts_map()$totals)(totals)
-      )
+        fillColor = ~pal(totals),
+        weight = 1.5,
+        fillOpacity = 0.7,
+        smoothFactor = 0.5,
+        color = "white",
+        highlight = highlightOptions(
+          weight = 3,
+          color = "#54565b",
+          bringToFront = TRUE
+        ),
+        label = labels,
+        labelOptions = labelOptions(
+          style = list("font-weight" = "normal", padding = "3px 8px"),
+          textsize = "15px",
+          direction = "auto"
+        )
+      ) %>%
+      addLegend(
+        pal = pal, values = ~totals, opacity = 0.7, 
+        title = NULL, position = "bottomright"
+      ) 
   })
   
 }
