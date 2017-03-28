@@ -8,7 +8,7 @@ load_shapefile <- function(data) {
     layer = "la_city_council_district_2012",
     verbose = F
   )
- 
+  
   # start organizing the data request numbers by council district 
   council_service_totals <- data %>%
     group_by(council_district, request_type) %>%
@@ -50,10 +50,6 @@ load_shapefile <- function(data) {
       "8", "9", "10", "11", "12", "13",
       "14", "15"
     ))
-  
-  # get the districts in numeric order in the object@data section
-  districts@data <- districts@data %>%
-    arrange(name)
   
   # return the spatial polygons df
   return(districts)
