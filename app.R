@@ -2,6 +2,8 @@ library(shiny)
 library(shinydashboard)
 #library(shinyjs)
 library(tidyverse)
+library(stringr)
+library(lubridate)
 library(plotly)
 library(leaflet)
 
@@ -107,15 +109,17 @@ body <- dashboardBody(
     tabItem(
       tabName = "services",
       box(
-        input <- dateRangeInput('dateRange',
-                                label = 'Date Range',
-                                start = Sys.Date() - 365, end = Sys.Date()-2),
+        input <- dateRangeInput(
+          "service_date_range",
+          label = "Select Date Range:",
+          start = today() - 365, 
+          end = today() - 2),
         width = 12
       ),
       box(
-        title="Service Request Types by Day", 
+        title = "", 
         width = 12,
-        plotlyOutput("request_type_hist")
+        plotlyOutput("request_type_date_range")
       )
     )
   ) # end tabItems
@@ -186,28 +190,13 @@ server <- function(input, output) {
     p <- heat %>%
       plot_ly() %>%
       add_heatmap(x = ~day, y = ~hour, z = ~n,
-                  colorscale = warm_gradient, showscale = F,
-                  text = ~paste("Day: ", day, "<br>Hour: ", hour,
-                                "<br>Total Requests: ", n),
-                  hoverinfo = "text") 
+                  colorscale = warm_gradient, showscale = F) 
     
     p %>% layout(xaxis = list(title = ""),
                  yaxis = list(title = "Hour of the day"))
   })
   
-  output$request_type_hist <- renderPlotly({
-    title_string <- paste("Request Types by Volume from ", as.character(input$dateRange[1]), " to ", as.character(input$dateRange[2]) )
-    plot_ly(data %>% subset(data$created_date > input$dateRange[1] & 
-                            data$created_date < input$dateRange[2]),
-                            x = ~request_type, type="histogram", colors = "Set1") %>% 
-            layout(title = title_string, 
-                xlab("Request Type")
-                )
-  })
-  
   # maps ----------------------------------------------------------------------- 
-  
-  # reactive data
   districts_map <- reactive({
     districts@data <- districts@data %>% 
       select_("name", "DISTRICT", input$map_request_type) 
@@ -256,9 +245,41 @@ server <- function(input, output) {
         pal = pal, values = ~totals, opacity = 0.7, 
         title = NULL, position = "bottomright"
       ) 
+  }) 
+  
+  # services ------------------------------------------------------------------- 
+  output$request_type_date_range <- renderPlotly({
+    
+    before <- parse_date(input$service_date_range[1])
+    after <- parse_date(input$service_date_range[2])
+    
+    title_string <- paste(
+      "Request Types by Volume from", 
+      wday(before, label = T), month(before, label = T, abbr = F), 
+      day(before), year(before), "to", 
+      wday(after, label = T), month(after, label = T, abbr = F), 
+      day(after), year(after), sep = " "
+    )
+    
+    data %>% 
+      filter(created_date > before & created_date < after) %>%
+      group_by(request_type) %>%
+      count() %>%
+      ungroup() %>%
+      mutate(request_type = str_wrap(request_type, width = 25)) %>%
+      plot_ly(y = ~request_type, x = ~n, hoverinfo = "x",
+              type = "bar", orientation = "h",
+              marker = list(color = warm[4])) %>% 
+      layout(
+        title = title_string, 
+        xaxis = list(title = "", range = ~c(0, max(n) + 40000)),
+        yaxis = list(title = ""),
+        margin = list(l = 220, pad = 10))
+    
   })
   
-}
+} # end server
+
 
 # run app ---------------------------------------------------------------------- 
 shinyApp(ui, server)
