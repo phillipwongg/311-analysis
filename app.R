@@ -274,8 +274,7 @@ server <- function(input, output) {
         title = title_string, 
         xaxis = list(title = "", range = ~c(0, max(n) + 40000)),
         yaxis = list(title = ""),
-        margin = list(l = 220, pad = 10),
-        height = "800px")
+        margin = list(l = 220, pad = 10))
     
   })
   
