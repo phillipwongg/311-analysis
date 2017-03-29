@@ -12,7 +12,8 @@
   --slate-blue: #30434D;
   --dark-blue: #1C3340;
   --light-blue: #8AC8E9;
-  --orange: #CC4E10;
+  --red: #D53E4F;
+  --dark-red: #9E0142;
   --dark-text: #153872;
   --link: #2553A0;
   --bad: #D5080F;
@@ -24,8 +25,39 @@
 /*  
  *  tags
  */
+
+.datepicker table tr td.active.active, 
+.datepicker table tr td.active.highlighted.active, 
+.datepicker table tr td.active.highlighted:active, 
+.datepicker table tr td.active:active {
+  background-color: var(--red);
+  border-color: var(--red);
+}
+
+.datepicker table tr td.active.active:hover {
+  background-color: var(--dark-red);
+  border-color: var(--dark-red);
+}
+
+.datepicker table tr td span.active.active, 
+.datepicker table tr td span.active.disabled.active, 
+.datepicker table tr td span.active.disabled:active, 
+.datepicker table tr td span.active.disabled:hover.active, 
+.datepicker table tr td span.active.disabled:hover:active, 
+.datepicker table tr td span.active:active, 
+.datepicker table tr td span.active:hover.active, 
+.datepicker table tr td span.active:hover:active {
+  background-color: var(--red);
+  border-color: var(--red);
+}
+
+.datepicker table tr td span.active.active:hover {
+  background-color: var(--dark-red);
+  border-color: var(--dark-red);
+}
+ 
 .nav-tabs-custom>.nav-tabs>li.active {
-  border-top-color: var(--orange);
+  border-top-color: var(--red);
 }
 
 .pagination>.active>a, 
@@ -34,8 +66,8 @@
 .pagination>.active>span, 
 .pagination>.active>span:focus, 
 .pagination>.active>span:hover {
-  background-color: var(--orange)!important;
-  border-color: var(--orange)!important;
+  background-color: var(--red)!important;
+  border-color: var(--red)!important;
 }
 
 .skin-blue .main-header .logo,
@@ -59,5 +91,5 @@
 
 .skin-blue .sidebar-menu>li.active>a, .skin-blue .sidebar-menu>li:hover>a {
   background-color: var(--light-grey-hover);
-  border-left-color: var(--orange);
+  border-left-color: var(--red);
 }
