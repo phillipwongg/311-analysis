@@ -32,5 +32,15 @@ subset_data <- function(data) {
     mutate(total_requests_by_district = n()) %>%
     ungroup()
   
+  data <- data %>%
+  mutate(
+    time_to_solve = round(created_date %--% closed_date / ddays(1), 2),
+    update_not_solved = if_else(
+      is.na(closed_date),
+      round(created_date %--% updated_date / ddays(1), 2),
+      parse_double(NA_integer_)),
+    request_to_service = round(created_date %--% service_date / ddays(1), 2),
+    service_to_closed = round(service_date %--% closed_date / ddays(1), 2))  
+  
   return(data)
 }
