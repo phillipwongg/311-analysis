@@ -108,18 +108,25 @@ body <- dashboardBody(
     # Services ----------------------------------------------------------------- 
     tabItem(
       tabName = "services",
-      box(
-        input <- dateRangeInput(
-          "service_date_range",
-          label = "Select Date Range:",
-          start = today() - 365, 
-          end = today() - 2),
-        width = 12
-      ),
-      box(
-        title = "", 
-        width = 12,
-        plotlyOutput("request_type_date_range")
+      fluidRow(
+        box(
+          input <- dateRangeInput(
+            "service_date_range",
+            label = "Select Date Range:",
+            start = today() - 365, 
+            end = today() - 2),
+          width = 12
+        ),
+        box(
+          title = "", 
+          width = 12,
+          plotlyOutput("request_type_date_range")
+        ),
+        box(
+          title = "",
+          width = 12,
+          plotlyOutput("mean_completion_time_date_range")
+        ) 
       )
     )
   ) # end tabItems
@@ -248,21 +255,23 @@ server <- function(input, output) {
   }) 
   
   # services ------------------------------------------------------------------- 
+  service_start <- reactive({parse_date(input$service_date_range[1],
+    locale = locale(tz = "US/Pacific"))}) 
+  service_end <- reactive({parse_date(input$service_date_range[2],
+    locale = locale(tz = "US/Pacific"))})
+  service_period <- reactive({service_start() %--% service_end()}) 
+  
   output$request_type_date_range <- renderPlotly({
-    
-    before <- parse_date(input$service_date_range[1])
-    after <- parse_date(input$service_date_range[2])
-    
     title_string <- paste(
       "Request Types by Volume from", 
-      wday(before, label = T), month(before, label = T, abbr = F), 
-      day(before), year(before), "to", 
-      wday(after, label = T), month(after, label = T, abbr = F), 
-      day(after), year(after), sep = " "
+      wday(service_start(), label = T), month(service_start(), label = T, abbr = F), 
+      day(service_start()), year(service_start()), "to", 
+      wday(service_end(), label = T), month(service_end(), label = T, abbr = F), 
+      day(service_end()), year(service_end()), sep = " "
     )
     
     data %>% 
-      filter(created_date > before & created_date < after) %>%
+      filter(created_date %within% service_period()) %>%
       group_by(request_type) %>%
       count() %>%
       ungroup() %>%
@@ -276,6 +285,32 @@ server <- function(input, output) {
         yaxis = list(title = ""),
         margin = list(l = 220, pad = 10))
     
+  })
+  
+  output$mean_completion_time_date_range <- renderPlotly({
+    title_string <- paste(
+      "Mean Service Solve Time for Service Requests from", 
+      wday(service_start(), label = T), month(service_start(), label = T, abbr = F), 
+      day(service_start()), year(service_start()), "to", 
+      wday(service_end(), label = T), month(service_end(), label = T, abbr = F), 
+      day(service_end()), year(service_end()), sep = " "
+    )
+    
+    data %>%
+      filter(service_date %within% service_period()) %>%
+      group_by(request_type) %>%
+      summarise(mean_time_to_solve_days = round(mean(time_to_solve, na.rm = T), 2)) %>%
+      mutate(request_type = str_wrap(request_type, width = 25)) %>%
+      plot_ly(x = ~mean_time_to_solve_days, y = ~request_type,
+              text = ~paste(mean_time_to_solve_days, "days", sep = " "),
+              hoverinfo = "text",
+              type = "bar", orientation = "h",
+              marker = list(color = warm[4])) %>% 
+      layout(
+        title = title_string,
+        xaxis = list(title = "", range = ~c(0, max(mean_time_to_solve_days) + 20)),
+        yaxis = list(title = ""),
+        margin = list(l = 220, pad = 10))
   })
   
 } # end server
