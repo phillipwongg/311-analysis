@@ -1,0 +1,45 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(lubridate)
+```
+```{r}
+data <- read_csv("service_requests_sample.csv", col_types = list(
+  CreatedDate = col_datetime("%m/%d/%Y %H:%M"),
+  UpdatedDate = col_datetime("%m/%d/%Y %H:%M")
+))
+```
+```{r}
+problems(data)
+```
+```{r}
+spec(data)
+```
+```{r}
+data <- data %>%
+  mutate(created_time = paste(
+    hour(CreatedDate), 
+    minute(CreatedDate), sep = ""))  %>%
+  mutate(created_time = as.numeric(created_time)) %>%
+  mutate(created_time_of_day = case_when(
+    between(created_time, 0, 359) ~ "Midnight",
+    between(created_time, 400, 759) ~ "Early Morning",
+    between(created_time, 800, 1159) ~ "Morning",
+    between(created_time, 1200, 1559) ~ "Afternoon",
+    between(created_time, 1600, 1959) ~ "Evening",
+    between(created_time, 2000, 2359) ~ "Night"
+  ))
+```
+```{r}
+data %>%
+  group_by(Address) %>%
+  count() %>%
+  arrange(desc(n))
+```
+Ok, so now we've grouped by time and space. Need 2 custom groups by 
+
+1) to highlight problem areas 
+2) to hightlight problem requests 
